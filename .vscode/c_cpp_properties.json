@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/smit/test_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/smit/test_ws/src/autonomous_docking/include/**",
+        "/home/smit/test_ws/src/f1tenth_simulator/include/**",
+        "/home/smit/test_ws/src/laser_line_extraction/include/**",
+        "/home/smit/test_ws/src/mag/mag_base/include/**",
+        "/home/smit/test_ws/src/mag/mag_teleoperator/include/**",
+        "/home/smit/test_ws/src/music_player_server/include/**",
+        "/home/smit/test_ws/src/obstacle_detector/include/**",
+        "/home/smit/test_ws/src/path_generator/include/**",
+        "/home/smit/test_ws/src/path_generator_plugin/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}

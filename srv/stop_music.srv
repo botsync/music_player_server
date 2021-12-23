@@ -1,3 +1,4 @@
-string stop_command
+float32 duration
+string volume
 ---
 bool result

@@ -2,12 +2,13 @@
 
 import os
 import time
+from genpy import message
 import rospy
 import threading
 import signal
 from subprocess import call
-from music_player_server.srv import *
-from std_srvs import SetBool
+#from music_player_server.srv import *
+from std_srvs.srv import SetBool, SetBoolResponse
 import vlc
 from time import sleep
 
@@ -35,7 +36,10 @@ class music_player:
         self.player.vlm_set_loop("test_var", True)
         self.media_player.play()
 
-        return start_musicResponse(self.media_player.is_playing())
+        print("self.media_player.get_state(): %s\n",
+              self.media_player.get_state())
+
+        return SetBoolResponse(success=True, message="Music Started Successfully!\n")
 
     def handle_pause_music(self, req):
 
@@ -43,20 +47,20 @@ class music_player:
 
         self.media_player.set_pause(1)
 
-        return stop_musicResponse(True)
+        return SetBoolResponse(success=True, message="Music Paused Successfully!\n")
 
     # play_music_server
     def start_play_music_server(self):
 
         self.s1 = rospy.Service(
-            '/start_music', start_music, self.handle_play_music)
+            '/start_music', SetBool, self.handle_play_music)
         print ("Play Music Service Available!\n")
 
     # pause_music_server
     def start_pause_music_server(self):
 
         self.s2 = rospy.Service(
-            '/stop_music', start_music, self.handle_pause_music)
+            '/stop_music', SetBool, self.handle_pause_music)
         print ("Pause Music Service Available!\n")
 
 

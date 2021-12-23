@@ -22,8 +22,9 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate services in the 'srv' folder
 add_service_files(
-  FILES
-  std_srv
+ # FILES
+#  start_music.srv
+#  stop_music.srv
 )
  
 catkin_install_python(PROGRAMS scripts/test_script.py
@@ -48,13 +49,13 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES music_player_server
-  CATKIN_DEPENDS message_runtime
+#  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
 ###########
 ## Build ##
-###########True
+###########
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
@@ -62,4 +63,3 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
-

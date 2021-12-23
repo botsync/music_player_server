@@ -11,6 +11,7 @@ from subprocess import call
 from std_srvs.srv import SetBool, SetBoolResponse
 import vlc
 from time import sleep
+import rospkg
 
 
 class music_player:
@@ -68,7 +69,13 @@ if __name__ == "__main__":
 
     rospy.init_node('music_server_node')
 
-    music_file = "sample_music.mp3"
+    rospack = rospkg.RosPack()
+
+    pkg_path = rospack.get_path("music_player_server")
+
+    file_name = "sample_music.mp3"
+
+    music_file = pkg_path + "/scripts/" + file_name
 
     mps = music_player(music_file)
 

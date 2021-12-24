@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     file_name = "sample_music.mp3"
 
-    music_file = pkg_path + "/scripts/" + file_name
+    music_file = pkg_path + "/music_files/" + file_name
 
     mps = music_player(music_file)
 

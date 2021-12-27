@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import os
 import time
@@ -12,8 +12,8 @@ from std_srvs.srv import SetBool, SetBoolResponse
 import vlc
 from time import sleep
 import rospkg
-
-
+#from sklearn.externals.funcsigs import signature
+#from funcsigs import signature
 class music_player:
 
     def __init__(self, media_source):
@@ -46,22 +46,23 @@ class music_player:
 
         print ("Pause music request received!\n")
 
-        self.media_player.set_pause(1)
-
+        #self.media_player.set_pause(1)
+	
+        self.media_player.stop()
         return SetBoolResponse(success=True, message="Music Paused Successfully!\n")
 
     # play_music_server
     def start_play_music_server(self):
 
         self.s1 = rospy.Service(
-            '/start_music', SetBool, self.handle_play_music)
+            'start_music', SetBool, self.handle_play_music)
         print ("Play Music Service Available!\n")
 
     # pause_music_server
     def start_pause_music_server(self):
 
         self.s2 = rospy.Service(
-            '/stop_music', SetBool, self.handle_pause_music)
+            'stop_music', SetBool, self.handle_pause_music)
         print ("Pause Music Service Available!\n")
 
 

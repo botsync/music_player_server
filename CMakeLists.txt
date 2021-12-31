@@ -23,13 +23,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-#  start_music.srv
-#  stop_music.srv
+  MusicServer.srv
 )
  
-catkin_install_python(PROGRAMS scripts/test_script.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
 
 generate_messages(
    DEPENDENCIES

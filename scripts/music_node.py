@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+import sys
+
+print(sys.argv)
 
 import rospy
 import os
@@ -92,10 +96,6 @@ class music_player:
 if __name__ == "__main__":
 
     rospy.init_node('music_server_node', anonymous=False)
-
-    rospack = rospkg.RosPack()
-
-    #pkg_path = rospack.get_path("music_player_server")
 
     mps = music_player()
 

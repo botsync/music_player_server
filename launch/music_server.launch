@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <launch>
-    <node name="music_service_node" pkg="music_player_server" type="music_node_backup.py" />
+    <node name="music_service_node" pkg="music_player_server" type="music_node.py" />
 </launch>

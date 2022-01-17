@@ -1,22 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import rospy
 import os
 import time
-from genpy import message
-import rospy
-import threading
-import signal
-from subprocess import call
-from enum import Enum
-# from music_player_server.srv import *
-#from std_srvs.srv import SetBool, SetBoolResponse
 from music_player_server.srv import MusicServer, MusicServerResponse
 import vlc
 from time import sleep
 import rospkg
-# from sklearn.externals.funcsigs import signature
-# from funcsigs import signature
 
 
 class music_player:

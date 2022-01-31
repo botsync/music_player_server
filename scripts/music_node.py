@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 
+import rospkg
+from time import sleep
+import vlc
+from music_player_server.srv import MusicServer, MusicServerResponse
+import time
+import os
+import rospy
 import sys
 
 print(sys.argv)
-
-import rospy
-import os
-import time
-from music_player_server.srv import MusicServer, MusicServerResponse
-import vlc
-from time import sleep
-import rospkg
 
 
 class music_player:
@@ -53,15 +52,14 @@ class music_player:
         self.player.vlm_set_loop("test_var", True)
         self.media_player.play()
 
-        print("self.media_player.get_state(): {}\n".format(
-            self.media_player.get_state()))
+        #print("self.media_player.get_state(): {}\n".format(self.media_player.get_state()))
 
         return MusicServerResponse(True, "Music Started Succesfully!\n")
 
     # pause music callback
     def handle_pause_music(self, req):
 
-        print ("Pause music request received!\n")
+        #print ("Pause music request received!\n")
 
         # self.media_player.set_pause(1)
 
@@ -73,14 +71,14 @@ class music_player:
 
         self.s1 = rospy.Service(
             'start_music', MusicServer, self.handle_play_music)
-        print ("Play Music Service Available!\n")
+        #print ("Play Music Service Available!\n")
 
     # pause_music_server
     def start_pause_music_server(self):
 
         self.s2 = rospy.Service(
             'stop_music', MusicServer, self.handle_pause_music)
-        print ("Pause Music Service Available!\n")
+        #print ("Pause Music Service Available!\n")
 
 
 if __name__ == "__main__":

@@ -51,13 +51,15 @@ class music_player:
 
         curr_media_player_state_ = self.media_player.get_state()
 
+        print("curr_media_player: \n", curr_media_player_state_)
+
         #print("self.media_player.get_state(): {}\n".format(self.media_player.get_state()))
         print("self.media_player.get_state(): {}\n".format(
             curr_media_player_state_))
 
         vlc_resp_ = None
 
-        if(curr_media_player_state_ == "State.Opening" or curr_media_player_state_ == "State.Playing"):
+        if(curr_media_player_state_ == "vlc.State.Opening" or curr_media_player_state_ == "vlc.State.Playing"):
             return MusicServerResponse(True, "Music Started Succesfully!\n")
 
         else:
@@ -80,7 +82,7 @@ class music_player:
         self.s1 = rospy.Service(
             'start_music', MusicServer, self.handle_play_music)
         print ("Play Music Service Available!\n")
- 
+
     # pause_music_server
     def start_pause_music_server(self):
 

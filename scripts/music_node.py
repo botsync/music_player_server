@@ -49,12 +49,22 @@ class music_player:
         self.player.vlm_set_loop("test_var", True)
         self.media_player.play()
 
-        print("self.media_player.get_state(): {}\n".format(
-            self.media_player.get_state()))
+        curr_media_player_state_ = self.media_player.get_state()
 
-        return MusicServerResponse(True, "Music Started Succesfully!\n")
+        #print("self.media_player.get_state(): {}\n".format(self.media_player.get_state()))
+        print("self.media_player.get_state(): {}\n".format(
+            curr_media_player_state_))
+
+        vlc_resp_ = None
+
+        if(curr_media_player_state_ == "State.Opening" or curr_media_player_state_ == "State.Playing"):
+            return MusicServerResponse(True, "Music Started Succesfully!\n")
+
+        else:
+            return MusicServerResponse(False, "Request received bu unable to start Music!\n")
 
     # pause music callback
+
     def handle_pause_music(self, req):
 
         print ("Pause music request received!\n")

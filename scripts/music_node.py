@@ -57,13 +57,13 @@ class music_player:
         print("self.media_player.get_state(): {}\n".format(
             curr_media_player_state_))
 
-        vlc_resp_ = None
+        #vlc_resp_ = None
 
-        if(curr_media_player_state_ == "vlc.State.Opening" or curr_media_player_state_ == "vlc.State.Playing"):
+        if(curr_media_player_state_ == vlc.State.Opening or curr_media_player_state_ == vlc.State.Playing or curr_media_player_state_ == vlc.State.NothingSpecial):
             return MusicServerResponse(True, "Music Started Succesfully!\n")
 
         else:
-            return MusicServerResponse(False, "Request received bu unable to start Music!\n")
+            return MusicServerResponse(False, "Request received but unable to start music!\n")
 
     # pause music callback
 

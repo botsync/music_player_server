@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     sz_ = len(state_switch_.state_list)
 
-    rate = rospy.Rate(0.2)
+    rate = rospy.Rate(0.05)
 
     while not rospy.is_shutdown():
 
@@ -40,3 +40,5 @@ if __name__ == "__main__":
         curr_state_ = state_switch_.state_list[rand_idx_]
 
         state_switch_.state_pub.publish(curr_state_)
+
+        rate.sleep()

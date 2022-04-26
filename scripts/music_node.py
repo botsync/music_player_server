@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from fileinput import filename
+from genericpath import exists
+from tokenize import String
 import rospkg
 from time import sleep
 import vlc
@@ -8,6 +11,8 @@ import time
 import os
 import rospy
 import sys
+import os
+from std_msgs.msg import String
 
 print(sys.argv)
 
@@ -17,6 +22,7 @@ class music_player:
     def __init__(self):
 
         # VLC Component
+        print("Inside the constructor!")
         self.player = vlc.Instance('--input-repeat=1000')
         self.media_list = self.player.media_list_new()
         self.media_player = self.player.media_list_player_new()
@@ -24,23 +30,45 @@ class music_player:
         #self.media_player = self.player.media_list_player_new()
 
         # Initializing service servers
-        self.start_play_music_server()
-        self.start_pause_music_server()
+        # self.start_play_music_server()
+        # self.start_pause_music_server()
 
         # ROS utility functions
         self.pkg_path = rospkg.RosPack().get_path("music_player_server")
         self.music_file_path = self.pkg_path + "/music_files/"
 
+        self.music_file_sub_ = rospy.Subscriber(
+            "music_file_name_", String, self.handle_music)
+
     # start music callback
+
+    def handle_music(self, data):
+
+        print("Inside the callback!")
+
+        cnt = 0
+
+        while True:
+            cnt = cnt + 1
+            print("cnt: ", cnt)
+
+        if(data.data != ""):
+            self.handle_play_music(data.data)
+
+        else:
+            self.handle_pause_music()
+
     def handle_play_music(self, req):
 
-        print ("Play music request received!\n")
+        file_name = req
 
-        # ROS part
-        file_name = req.filename
+        print("filename: ", file_name)
+
         media_ = self.music_file_path + file_name
 
-        # vlc part -- setting the playlist
+        if not os.path.exists(media_):
+            return MusicServerResponse(False, "Requested Music file not found -- returning False\n")
+
         self.media_player.stop()
         self.media_list = self.player.media_list_new()
         self.media_player = self.player.media_list_player_new()
@@ -52,20 +80,15 @@ class music_player:
         self.player.vlm_set_loop("test_var", True)
         self.media_player.play()
 
-        #print("self.media_player.get_state(): {}\n".format(self.media_player.get_state()))
-
-        return MusicServerResponse(True, "Music Started Succesfully!\n")
+        # return MusicServerResponse(True, "Music Started Succesfully!\n")
 
     # pause music callback
-    def handle_pause_music(self, req):
-
-        #print ("Pause music request received!\n")
-
-        # self.media_player.set_pause(1)
+    def handle_pause_music(self):
 
         self.media_player.stop()
-        return MusicServerResponse(True, "Music Paused Successfully!\n")
+        # return MusicServerResponse(True, "Music Paused Successfully!\n")
 
+    '''
     # play_music_server
     def start_play_music_server(self):
 
@@ -79,6 +102,7 @@ class music_player:
         self.s2 = rospy.Service(
             'stop_music', MusicServer, self.handle_pause_music)
         #print ("Pause Music Service Available!\n")
+    '''
 
 
 if __name__ == "__main__":

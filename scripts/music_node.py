@@ -35,32 +35,32 @@ class music_player:
         
         self.last_thread = None
         self.counter = 0  
-
-        print('active_threads inside the music_player constructor: ', threading.active_count())
+        self.thread_list = []
 
     
     def handle_music(self, data):
         
         print('Inside the handle_music function')
         print('counter: ', self.counter)
-
-        print('active_threads before: ', threading.active_count())
         
-        '''
+        if len(self.thread_list) > 0:
+            self.thread_list[-1].kill()
+        
         t = KillableThread(1, self.handle_play_music, data.data)  
         t.start()
         
         time.sleep(5)
         t.kill()
+
+        #self.last_thread = t
+        self.thread_list.append(t)
         '''
-            
         if data.data=="":
             self.handle_pause_music()
         else:
             self.handle_play_music(data.data)
 
         print('active_threads after: ', threading.active_count())
-        '''
         if self.last_thread is not None:
             p = self.last_thread
             p.kill()
@@ -88,8 +88,12 @@ class music_player:
         #handle_play_music(data.data)
 
     def handle_play_music(self, req):
-        
-        print("Inside the handle_play_music function!")
+       
+        cnt = 0
+        while True:
+            print(cnt)
+            time.sleep(0.5)
+            cnt = cnt + 1
 
         file_name = req
 
@@ -143,8 +147,10 @@ class KillableThread(threading.Thread):
         
         print('Inside the run function!')
         self.func(*self.func_args)
-
-        pass
+        
+        is_killed = self._kill.wait(self._interval)
+        if is_killed:
+            break
 
     def kill(self):
         self._kill.set()

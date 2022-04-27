@@ -1,28 +1,26 @@
 #!/usr/bin/env python
 
+import threader
 from fileinput import filename
 from genericpath import exists
 from tokenize import String
 import rospkg
-from time import sleep
 import vlc
-from music_player_server.srv import MusicServer, MusicServerResponse
-import time
+from time import sleep
 import os
 import rospy
 import sys
 import os
 from std_msgs.msg import String
 import threading
-import multiprocessing
-
+import atexit
 
 class music_player:
 
     def __init__(self):
 
         # VLC Component
-        print("Inside the constructor!")
+        #print("Inside the constructor!")
         self.player = vlc.Instance('--input-repeat=1000')
         self.media_list = self.player.media_list_new()
         self.media_player = self.player.media_list_player_new()
@@ -34,80 +32,50 @@ class music_player:
             "music_file_name_", String, self.handle_music)
         
         self.last_thread = None
-        self.counter = 0  
-        self.thread_list = []
 
+        #self.threading.Timer(2, after_timeout).start()
+        #threading.Timer(2, self.after_timeout).start()
     
     def handle_music(self, data):
         
-        print('Inside the handle_music function')
-        print('counter: ', self.counter)
-        
-        if len(self.thread_list) > 0:
-            self.thread_list[-1].kill()
-        
-        t = KillableThread(1, self.handle_play_music, data.data)  
-        t.start()
-        
-        time.sleep(5)
-        t.kill()
+        #print("Callback received!")
+        #sleep(5)
 
-        #self.last_thread = t
-        self.thread_list.append(t)
-        '''
-        if data.data=="":
-            self.handle_pause_music()
-        else:
-            self.handle_play_music(data.data)
-
-        print('active_threads after: ', threading.active_count())
         if self.last_thread is not None:
-            p = self.last_thread
-            p.kill()
-            print ('Killed last thread')
+            #print("Trying to kill last thread")
+            self.last_thread.end()
+       
+        #print("data.data: " , data.data)
+        
+        #print("len(data.data): ", len(data.data))
 
-        if self.counter % 2 == 0:
-            t = KillableThread(1, self.handle_play_music, data.data)  
-            t.start()
-            self.last_thread = t
-        
+        if len(data.data) > 0:
+            runMe = AThread(self.handle_play_music, data.data)
         else:
-            self.last_thread.kill()
+            runMe = AThread(self.handle_pause_music, data.data)
         
-        self.counter = self.counter  + 1
-        print('Inside the handle_music function!')
-        if data.data == "":
-            t = KillableThread(1, self.handle_play_music, data.data)   
-        else:
-            t = KillableThread(1, self.handle_pause_music)   
+        runMe.start()
+        self.last_thread = runMe 
 
-        t.start()
-        
-        self.last_thread = t
-        '''
-        #handle_play_music(data.data)
 
     def handle_play_music(self, req):
        
-        cnt = 0
-        while True:
-            print(cnt)
-            time.sleep(0.5)
-            cnt = cnt + 1
-
+        #print("Inside the handle_play_music function")
         file_name = req
 
-        print("filename: ", file_name)
+        #print("filename: ", file_name)
 
         media_ = self.music_file_path + file_name
         
         file_exists_ = os.path.exists(media_)
         
-        print("file_exists_: ", file_exists_)
+       # print("file_exists_: ", file_exists_)
+        
         
 
         if not os.path.exists(media_):
-            return MusicServerResponse(False, "Requested Music file not found -- returning False\n")
+            self.media_player.stop()
+            return 
 
         self.media_player.stop()
         self.media_list = self.player.media_list_new()
@@ -117,61 +85,44 @@ class music_player:
         self.media_list.add_media(self.media)
         self.media_player.set_media_list(self.media_list)
         
-        print('Trying to play the song!')
+        #print('Trying to play the song!')
         # vlc part -- playing the song
         self.player.vlm_set_loop("test_var", True)
         self.media_player.play()
 
-        return MusicServerResponse(True, "Music Started Succesfully!\n")
+        return
+
 
     # pause music callback
-    def handle_pause_music(self):
-
+    def handle_pause_music(self, data):
+        
+        #print("Inside the pause_music function")
         self.media_player.stop()
-        # return MusicServerResponse(True, "Music Paused Successfully!\n")
 
 
-
-class KillableThread(threading.Thread):
-    
-    def __init__(self, sleep_interval, func_, *args):
+class AThread(threading.Thread):
+   
+    def __init__(self, func_, *args):
         
-        super(KillableThread, self).__init__()
-        self._kill = threading.Event()
-        self._interval = sleep_interval
-        self.func = func_
-        self.func_args = args
-        #self.func_args = args
-    
-    def run(self):  
-        
-        print('Inside the run function!')
-        self.func(*self.func_args)
-        
-        is_killed = self._kill.wait(self._interval)
-        if is_killed:
-            break
+        threading.Thread.__init__(self)
+	    #self.stopped = False
+        self.func = func_   
+        self.file_name = args
 
-    def kill(self):
-        self._kill.set()
+    def run(self):
+        
+        self.func(*self.file_name)
+        self.stopped = False
+
+
+    def end(self):
+        if self.is_alive():
+            threader.killThread(self.ident)
+            self.stopped = True
 
 if __name__ == "__main__":
 
     rospy.init_node('music_server_node', anonymous=False)
 
     mps = music_player()
-    #global thread    
-    #thread.join(3)
-    
-    
-
-    '''
-    t = KillableThread(sleep_interval=1)
-    t.start()
-    # Every 5 seconds it prints:
-    #: Do Something
-    #t.kill()
-    time.sleep(10)
-    t.kill()
-    '''
     rospy.spin()

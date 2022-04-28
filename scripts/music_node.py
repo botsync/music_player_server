@@ -32,7 +32,7 @@ class music_player:
             "music_file_name_", String, self.handle_music)
         
         self.last_thread = None
-
+        self.last_music_file = ''
         #self.threading.Timer(2, after_timeout).start()
         #threading.Timer(2, self.after_timeout).start()
     
@@ -40,6 +40,9 @@ class music_player:
         
         #print("Callback received!")
         #sleep(5)
+        
+        if data.data == self.last_music_file:
+            return
 
         if self.last_thread is not None:
             #print("Trying to kill last thread")
@@ -56,7 +59,7 @@ class music_player:
         
         runMe.start()
         self.last_thread = runMe 
-
+        self.last_music_file = data.data
 
     def handle_play_music(self, req):
        

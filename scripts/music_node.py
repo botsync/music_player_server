@@ -20,7 +20,7 @@ print(sys.argv)
 class music_player:
 
     def __init__(self):
-
+        self.is_playing=0
         # VLC Component
         print("Inside the constructor!")
         self.player = vlc.Instance('--input-repeat=1000')
@@ -48,9 +48,9 @@ class music_player:
 
         cnt = 0
 
-        while True:
-            cnt = cnt + 1
-            print("cnt: ", cnt)
+        #while True:
+        #    cnt = cnt + 1
+        #    print("cnt: ", cnt)
 
         if(data.data != ""):
             self.handle_play_music(data.data)
@@ -59,7 +59,9 @@ class music_player:
             self.handle_pause_music()
 
     def handle_play_music(self, req):
-
+        if self.is_playing:
+		return
+	self.is_playing=1
         file_name = req
 
         print("filename: ", file_name)
@@ -84,7 +86,7 @@ class music_player:
 
     # pause music callback
     def handle_pause_music(self):
-
+        self.is_playing=0
         self.media_player.stop()
         # return MusicServerResponse(True, "Music Paused Successfully!\n")
 
